@@ -1,27 +1,30 @@
-import axios from '../api/axios';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
-import { Separator } from '../components/ui/separator';
-import { Eye, EyeOff, Mail, MessageSquare } from 'lucide-react';
-import { ThemeToggle } from '../components/ThemeToggle';
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { Eye, EyeOff, Github, Mail, MessageSquare } from 'lucide-react'
+import { ThemeToggle } from '@/components/ThemeToggle'
+import axios from '@/api/axios'
 
 export default function SignIn() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const navigate = useNavigate()
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      const res = await axios.post('/users/login', { email, password });
-      localStorage.setItem('token', res.data.token);
-      alert("Login successful!");
+      const res = await axios.post('/users/login', { email, password })
+      localStorage.setItem('token', res.data.token)
+      localStorage.setItem('email', email) // Store email for Dashboard use
+      alert('Login successful!')
+      navigate('/dashboard') // Redirect to dashboard
     } catch (err: any) {
-      alert(err.response?.data?.error || "Login failed");
+      alert(err.response?.data?.error || 'Login failed')
     }
   }
 
@@ -30,7 +33,7 @@ export default function SignIn() {
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
-      
+
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center mb-8">
           <Link to="/" className="flex items-center space-x-2 mb-4 transition-transform duration-200 hover:scale-105">
@@ -54,11 +57,15 @@ export default function SignIn() {
           <CardContent className="space-y-4">
             <div className="space-y-4">
               <Button variant="outline" className="w-full transition-all duration-200 hover:scale-105 hover:shadow-md">
+                <Github className="mr-2 h-4 w-4" />
+                Continue with GitHub
+              </Button>
+              <Button variant="outline" className="w-full transition-all duration-200 hover:scale-105 hover:shadow-md">
                 <Mail className="mr-2 h-4 w-4" />
                 Continue with Google
               </Button>
             </div>
-            
+
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <Separator className="w-full" />
@@ -100,26 +107,19 @@ export default function SignIn() {
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </Button>
                 </div>
               </div>
-              
+
               <div className="flex items-center justify-between">
-                <Link
-                  to="/forgot-password"
-                  className="text-sm text-primary hover:underline transition-colors duration-200"
-                >
+                <Link to="/forgot-password" className="text-sm text-primary hover:underline transition-colors duration-200">
                   Forgot password?
                 </Link>
               </div>
 
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="w-full gradient-primary text-white transition-all duration-200 hover:scale-105 hover:shadow-lg"
               >
                 Sign In
@@ -128,7 +128,7 @@ export default function SignIn() {
           </CardContent>
           <CardFooter>
             <p className="text-center text-sm text-muted-foreground w-full">
-              Don't have an account?{' '}
+              Don’t have an account?{' '}
               <Link to="/signup" className="text-primary hover:underline font-medium transition-colors duration-200">
                 Sign up
               </Link>
