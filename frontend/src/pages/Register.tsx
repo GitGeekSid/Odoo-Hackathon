@@ -1,22 +1,15 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
-import axios from '../api/axios';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleRegister = async (e: React.FormEvent) => {
+  const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const res = await axios.post('/users/register', {
-        username, email, password,
-      });
-      alert("Registered successfully!");
-    } catch (err: any) {
-      alert(err.response?.data?.error || "Registration failed");
-    }
+    // register logic here
+    console.log(username, email, password);
   };
 
   return (

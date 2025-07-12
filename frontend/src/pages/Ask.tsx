@@ -1,36 +1,36 @@
-import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
-import axios from '../api/axios';
+import { useState } from 'react';
+import axios from 'axios';
 
-const Ask = () => {
+const Ask: React.FC = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [tags, setTags] = useState('');
 
-  const handleAsk = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAsk = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const res = await axios.post('/questions', { title, description }, {
-        headers: { Authorization: `Bearer ${token}` },
+      await axios.post('/api/questions', {
+        title,
+        description,
+        tags: tags.split(',').map((t) => t.trim()),
+      }, {
+        headers: {
+          Authorization: `Bearer YOUR_TOKEN_HERE`,
+        },
       });
-      alert("Question posted!");
-    } catch (err: any) {
-      alert(err.response?.data?.error || "Failed to post question");
+      alert('Question posted');
+    } catch (err) {
+      alert('Failed to post question');
     }
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="max-w-2xl mx-auto p-6">
-        <h2 className="text-2xl font-bold mb-4">Ask a Question</h2>
-        <form onSubmit={handleAsk} className="space-y-4">
-          <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" className="w-full p-2 border rounded" />
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" className="w-full p-2 border rounded h-40"></textarea>
-          <button type="submit" className="bg-purple-600 text-white px-4 py-2 rounded">Submit</button>
-        </form>
-      </div>
-    </>
+    <div className="max-w-xl mx-auto mt-10">
+      <h2 className="text-xl mb-4">Ask a Question</h2>
+      <input className="border p-2 w-full mb-2" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+      <textarea className="border p-2 w-full mb-2" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+      <input className="border p-2 w-full mb-2" placeholder="Tags (comma separated)" value={tags} onChange={(e) => setTags(e.target.value)} />
+      <button className="bg-blue-500 text-white px-4 py-2" onClick={handleAsk}>Post</button>
+    </div>
   );
 };
 
